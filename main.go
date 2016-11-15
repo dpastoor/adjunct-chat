@@ -35,6 +35,11 @@ func main() {
 			//so.Emit("chat", msg) // this effectively echos back the message only to the sender in the chat channel
 			so.BroadcastTo("edits", "update", msg) // sends update to all OTHER clients
 		})
+		so.On("edit:knit", func(msg string) {
+			log.Println("recieved knit message", msg)
+			//so.Emit("chat", msg) // this effectively echos back the message only to the sender in the chat channel
+			so.BroadcastTo("edits", "update:knit", msg) // sends update to all OTHER clients
+		})
 		so.On("disconnection", func() {
 			log.Println("disconnected from chat")
 		})
