@@ -22,11 +22,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	server.On("connection", func(so socketio.Socket) {
-		so.Emit("chat", "hello message")
-		log.Println("on connection")
+		log.Println("client connected!")
+		so.Emit("chat", "hello from server")
+		so.Join("edits")
+		// I don't fully understand the behavior, but it seems like
+		// the only way to send to both is to emit, when the event was not triggered
+		// by a given client, else emitting will only send back
 		so.On("edit", func(msg string) {
 			log.Println("recieved message", msg)
+			//so.Emit("chat", msg) // this effectively echos back the message only to the sender in the chat channel
+			so.BroadcastTo("edits", "update", msg) // sends update to all OTHER clients
 		})
 		so.On("disconnection", func() {
 			log.Println("disconnected from chat")
