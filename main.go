@@ -33,6 +33,7 @@ func main() {
 		so.On("edit", func(msg string) {
 			log.Println("recieved message", msg)
 			//so.Emit("chat", msg) // this effectively echos back the message only to the sender in the chat channel
+			// emulate a delay in network
 			so.BroadcastTo("edits", "update", msg) // sends update to all OTHER clients
 		})
 		so.On("edit:knit", func(msg string) {
